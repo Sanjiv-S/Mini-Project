@@ -1,0 +1,111 @@
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+/* Applied animations */
+.logo i {
+  animation: pulse 2s infinite;
+}
+
+#drop-area {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.results-container {
+  animation: slideUp 0.5s ease-out;
+}
+
+.loader {
+  animation: spin 1s linear infinite;
+}
+
+.prediction-fill {
+  animation: slideUp 1s ease-out;
+}
+
+.sample-img {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Animation for the shimmer effect during loading */
+.shimmer {
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+}
+
+/* Section transitions */
+.upload-section, .processing-section, .results-section {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.upload-section.hidden, .processing-section.hidden, .results-section.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.upload-section:not(.hidden), .processing-section:not(.hidden), .results-section:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Interactive elements hover animations */
+.btn, .file-input-label, .sample-img {
+  transition: all 0.3s ease;
+}
+
+.btn:active, .file-input-label:active {
+  transform: scale(0.98);
+}

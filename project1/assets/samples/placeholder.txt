@@ -1,0 +1,9 @@
+This is a placeholder file to ensure the samples directory exists. 
+
+In a real application, you would place sample eye scan images in this directory with filenames:
+- normal.jpg
+- diabetic-retinopathy.jpg
+- glaucoma.jpg
+- cataract.jpg
+
+Since we can't include binary files, you can use URLs of eye scan images from medical repositories or provide your own images.

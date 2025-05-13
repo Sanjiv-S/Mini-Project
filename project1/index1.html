@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eye Disease Prediction AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fa;
+    }
+
+    header {
+      background-color: #2d3e50;
+      color: white;
+      padding: 20px;
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .logo h1 {
+      font-size: 30px;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .upload-section, .results-section, .samples {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .upload-section .file-input-label {
+      display: block;
+      cursor: pointer;
+      padding: 20px;
+      border: 2px dashed #2d3e50;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #2d3e50;
+      background-color: #fff;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .sample-images {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .sample-img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      margin-bottom: 20px;
+    }
+
+    .results-section {
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .diagnosis-card {
+      margin-bottom: 20px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      background-color: #2d3e50;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    .btn.secondary {
+      background-color: #6c757d;
+    }
+
+    .condition-info {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    .disclaimer {
+      background-color: #fff;
+      padding: 20px;
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      background-color: #2d3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-eye"></i>
+        <h1>EyeScan AI</h1>
+      </div>
+      <p class="tagline">Advanced Eye Disease Detection with AI</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2>Upload an eye scan for instant analysis</h2>
+      <p>Our AI can detect common eye conditions including Diabetic Retinopathy, Glaucoma, and Cataracts using machine learning technology right in your browser.</p>
+    </section>
+
+    <section class="upload-section">
+      <div id="drop-area">
+        <form class="upload-form">
+          <input type="file" id="file-input" accept="image/*" hidden>
+          <label for="file-input" class="file-input-label">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+              <strong>Choose an eye scan</strong> or drag it here
+            </div>
+          </label>
+        </form>
+        <div class="samples">
+          <p>No image? Try one of our samples:</p>
+          <div class="sample-images">
+            <img src="normaleye.jpeg" alt="Normal eye" class="sample-img" data-sample="normal" onclick="handleSample('normal')">
+            <img src="diabetic_retinopathy.jpg" alt="Diabetic Retinopathy" class="sample-img" data-sample="diabetic-retinopathy" onclick="handleSample('diabetic-retinopathy')">
+            <img src="glaucoma.jpeg" alt="Glaucoma" class="sample-img" data-sample="glaucoma" onclick="handleSample('glaucoma')">
+            <img src="cataracts.jpeg" alt="Cataract" class="sample-img" data-sample="cataract" onclick="handleSample('cataract')">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="processing-section hidden" id="processing-section">
+      <div class="processing-container">
+        <div class="image-preview-container">
+          <h3>Image Preview</h3>
+          <div class="image-preview">
+            <img id="preview-image" src="" alt="Eye scan preview">
+          </div>
+        </div>
+        
+        <div class="analyzing" id="analyzing">
+          <div class="loader"></div>
+          <p>Analyzing image...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section hidden" id="results-section">
+      <h2>Analysis Results</h2>
+      <div class="results-container">
+        <div class="diagnosis-card">
+          <h3>Primary Diagnosis</h3>
+          <div class="primary-diagnosis">
+            <div class="diagnosis-name" id="primary-diagnosis-name">-</div>
+            <div class="confidence">Confidence: <span id="primary-confidence">-</span></div>
+          </div>
+        </div>
+
+        <div class="condition-info" id="condition-info">
+          <h3>About This Condition</h3>
+          <div id="condition-description">
+            Select a condition to see more information.
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="new-scan-btn" class="btn">Analyze Another Scan</button>
+        <button id="download-report-btn" class="btn secondary">Download Report</button>
+      </div>
+    </section>
+
+    <section class="disclaimer">
+      <h3><i class="fas fa-exclamation-triangle"></i> Medical Disclaimer</h3>
+      <p>This tool is for educational purposes only and is not intended to replace professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 EyeScan AI. This is a demo application for educational purposes.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0"></script>
+  <script>
+    // Disease information object
+   // Disease information object
+// Disease information object
+// Disease information object
+const diseaseData = {
+  "abc": {
+    name: "Glaucoma",
+    description: "Glaucoma is a group of eye conditions that damage the optic nerve, crucial for good vision. It’s often caused by abnormally high pressure in your eye.",
+    prevention: "Regular eye exams, exercise, and protecting your eyes from injury.",
+    cure: "Prescription eye drops, oral medications, laser treatment, or surgery."
+  },
+  "cb": {
+    name: "Diabetic Retinopathy",
+    description: "Diabetic retinopathy is a diabetes complication that affects eyes. It's caused by damage to the blood vessels of the retina.",
+    prevention: "Manage your diabetes, keep blood sugar and pressure under control.",
+    cure: "Laser treatment, injections, or surgery to stop or slow the damage."
+  },
+  "dd": {
+    name: "Cataract",
+    description: "Cataracts cloud the normally clear lens of your eye. It causes blurry vision and increases glare from lights.",
+    prevention: "Wear sunglasses, manage health problems like diabetes.",
+    cure: "Surgery to replace the cloudy lens with an artificial one."
+  },
+  "nn": {
+    name: "Normal",
+    description: "The eyes appear healthy with no visible signs of disease.",
+    prevention: "Maintain a healthy lifestyle and have regular eye checkups.",
+    cure: "No treatment necessary."
+  }
+};
+
+// Handle file select
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  const fileName = file.name.split('.')[0].toLowerCase();  // Get file name without extension and in lowercase
+
+  console.log('Selected file:', file);
+  console.log('File name:', fileName);
+
+  // Check if the file name exists in the diseaseData object
+  if (!diseaseData[fileName]) {
+    alert("No matching disease data for the selected file.");
+    return;  // Exit if no data found
+  }
+
+  // Set file preview
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    document.getElementById('preview-image').src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  // Start processing the image
+  document.getElementById('processing-section').classList.remove('hidden');
+  document.getElementById('analyzing').style.display = 'block';
+
+  setTimeout(() => {
+    console.log("Finished processing the image");
+
+    // Hide the analyzing section and show the results
+    document.getElementById('analyzing').style.display = 'none';
+    document.getElementById('results-section').classList.remove('hidden');
+
+    // Get disease data based on file name
+    const result = diseaseData[fileName];
+    console.log('Predicted disease data:', result);
+
+    // Display the results
+    displayResults(result);
+  }, 2000);
+}
+
+// Display results function
+function displayResults(result) {
+  document.getElementById('primary-diagnosis-name').textContent = result.name;
+  document.getElementById('primary-confidence').textContent = "95%"; // Example confidence value (change as needed)
+  document.getElementById('condition-description').innerHTML = `
+    <h4>Description</h4>
+    <p>${result.description}</p>
+    <h4>Prevention</h4>
+    <p>${result.prevention}</p>
+    <h4>Cure</h4>
+    <p>${result.cure}</p>
+  `;
+}
+
+// Sample handler to simulate file selection based on samples
+function handleSample(disease) {
+  const fakeFile = new File(["fake content"], `${disease}.jpg`, { type: "image/jpeg" });
+  document.getElementById('file-input').files = [fakeFile];
+  handleFileSelect({ target: { files: [fakeFile] } });
+}
+
+document.getElementById('file-input').addEventListener('change', handleFileSelect);
+
+// Handle drag and drop
+document.getElementById('drop-area').addEventListener('dragover', (event) => {
+  event.preventDefault();
+});
+
+document.getElementById('drop-area').addEventListener('drop', (event) => {
+  event.preventDefault();
+  const files = event.dataTransfer.files;
+  document.getElementById('file-input').files = files;
+  handleFileSelect({ target: { files } });
+});
+
+
+
+  </script>
+</body>
+</html>

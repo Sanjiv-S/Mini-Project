@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eye Disease Prediction Results</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-eye"></i>
+        <h1>EyeScan AI</h1>
+      </div>
+      <p class="tagline">Eye Disease Prediction Results</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="results-section">
+      <h2>Analysis Results</h2>
+      <div class="results-container">
+        <div class="diagnosis-card">
+          <h3>Primary Diagnosis</h3>
+          <div class="primary-diagnosis">
+            <div class="diagnosis-name" id="primary-diagnosis-name">-</div>
+            <div class="confidence">Confidence: <span id="primary-confidence">-</span></div>
+          </div>
+        </div>
+
+        <div class="condition-info" id="condition-info">
+          <h3>About This Condition</h3>
+          <div id="condition-description">
+            Select a condition to see more information.
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="new-scan-btn" class="btn">Analyze Another Scan</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 EyeScan AI. This is a demo application for educational purposes.</p>
+    </div>
+  </footer>
+
+  <script>
+    const diseaseData = {
+      "abc": {
+        name: "Glaucoma",
+        description: "Glaucoma is a group of eye conditions that damage the optic nerve, crucial for good vision. It’s often caused by abnormally high pressure in your eye.",
+        prevention: "Regular eye exams, exercise, and protecting your eyes from injury.",
+        cure: "Prescription eye drops, oral medications, laser treatment, or surgery."
+      },
+      "cb": {
+        name: "Diabetic Retinopathy",
+        description: "Diabetic retinopathy is a diabetes complication that affects eyes. It's caused by damage to the blood vessels of the retina.",
+        prevention: "Manage your diabetes, keep blood sugar and pressure under control.",
+        cure: "Laser treatment, injections, or surgery to stop or slow the damage."
+      },
+      "dd": {
+        name: "Cataract",
+        description: "Cataracts cloud the normally clear lens of your eye. It causes blurry vision and increases glare from lights.",
+        prevention: "Wear sunglasses, manage health problems like diabetes.",
+        cure: "Surgery to replace the cloudy lens with an artificial one."
+      },
+      "nn": {
+        name: "Normal",
+        description: "The eyes appear healthy with no visible signs of disease.",
+        prevention: "Maintain a healthy lifestyle and have regular eye checkups.",
+        cure: "No treatment necessary."
+      }
+    };
+
+    // Get the disease name from the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const diseaseKey = urlParams.get('disease');
+
+    if (diseaseKey && diseaseData[diseaseKey]) {
+      const result = diseaseData[diseaseKey];
+      
+      document.getElementById('primary-diagnosis-name').textContent = result.name;
+      document.getElementById('primary-confidence').textContent = "95%";  // Example confidence
+      document.getElementById('condition-description').innerHTML = `
+        <h4>Description</h4>
+        <p>${result.description}</p>
+        <h4>Prevention</h4>
+        <p>${result.prevention}</p>
+        <h4>Cure</h4>
+        <p>${result.cure}</p>
+      `;
+    } else {
+      alert("Invalid disease data.");
+    }
+
+    document.getElementById('new-scan-btn').addEventListener('click', () => {
+      window.location.href = 'index2.html';  // Redirect back to the upload page
+    });
+  </script>
+</body>
+</html>

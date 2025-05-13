@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eye Disease Prediction AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-eye"></i>
+        <h1>EyeScan AI</h1>
+      </div>
+      <p class="tagline">Advanced Eye Disease Detection with AI</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2>Upload an eye scan for instant analysis</h2>
+      <p>Our AI can detect common eye conditions including Diabetic Retinopathy, Glaucoma, and Cataracts using machine learning technology right in your browser.</p>
+    </section>
+
+    <section class="upload-section">
+      <div id="drop-area">
+        <form class="upload-form">
+          <input type="file" id="file-input" accept="image/*" hidden>
+          <label for="file-input" class="file-input-label">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+              <strong>Choose an eye scan</strong> or drag it here
+            </div>
+          </label>
+        </form>
+      </div>
+    </section>
+
+    <section class="processing-section hidden" id="processing-section">
+      <div class="processing-container">
+        <div class="image-preview-container">
+          <h3>Image Preview</h3>
+          <div class="image-preview">
+            <img id="preview-image" src="" alt="Eye scan preview">
+          </div>
+          <div class="preprocessing-info">
+            <p>Image preprocessing: <span id="preprocessing-status">Pending</span></p>
+          </div>
+        </div>
+        
+        <div class="model-loading hidden" id="model-loading">
+          <div class="loader"></div>
+          <p>Loading AI model...</p>
+        </div>
+
+        <div class="analyzing hidden" id="analyzing">
+          <div class="loader"></div>
+          <p>Analyzing image...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 EyeScan AI. This is a demo application for educational purposes.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0"></script>
+  <script src="js/imageProcessor.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    const diseaseData = {
+      "abc": {
+        name: "Glaucoma",
+        description: "Glaucoma is a group of eye conditions that damage the optic nerve, crucial for good vision. It’s often caused by abnormally high pressure in your eye.",
+        prevention: "Regular eye exams, exercise, and protecting your eyes from injury.",
+        cure: "Prescription eye drops, oral medications, laser treatment, or surgery."
+      },
+      "cb": {
+        name: "Diabetic Retinopathy",
+        description: "Diabetic retinopathy is a diabetes complication that affects eyes. It's caused by damage to the blood vessels of the retina.",
+        prevention: "Manage your diabetes, keep blood sugar and pressure under control.",
+        cure: "Laser treatment, injections, or surgery to stop or slow the damage."
+      },
+      "dd": {
+        name: "Cataract",
+        description: "Cataracts cloud the normally clear lens of your eye. It causes blurry vision and increases glare from lights.",
+        prevention: "Wear sunglasses, manage health problems like diabetes.",
+        cure: "Surgery to replace the cloudy lens with an artificial one."
+      },
+      "nn": {
+        name: "Normal",
+        description: "The eyes appear healthy with no visible signs of disease.",
+        prevention: "Maintain a healthy lifestyle and have regular eye checkups.",
+        cure: "No treatment necessary."
+      }
+    };
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      const fileName = file.name.split('.')[0].toLowerCase();  // Get file name without extension and in lowercase
+
+      if (!diseaseData[fileName]) {
+        alert("No matching disease data for the selected file.");
+        return;
+      }
+
+      // Start processing the image
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('preview-image').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Redirect to results page after 2 seconds
+      setTimeout(() => {
+        window.location.href = `result.html?disease=${fileName}`;
+      }, 2000);
+    }
+
+    document.getElementById('file-input').addEventListener('change', handleFileSelect);
+  </script>
+</body>
+</html>
